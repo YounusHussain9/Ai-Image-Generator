@@ -46,7 +46,7 @@ const AiForm = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
+    <div className="flex flex-col mt-5 items-center min-h-screen">
       <div>
         <div className="w-[400px]">
           <div className="text-center my-5">
