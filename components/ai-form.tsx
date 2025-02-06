@@ -14,11 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getAiResponse } from "@/server/ai";
 import Image from "next/image";
 
 const AiForm = () => {
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
