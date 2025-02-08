@@ -16,10 +16,9 @@ export async function POST(req: Request) {
     });
 
     const imageUrl = response.data[0].url;
-    console.log(imageUrl);
     return NextResponse.json({ imageUrl });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Failed to generate image" });
+    return NextResponse.json({ error: "Failed to generate image",  });
   }
 }
