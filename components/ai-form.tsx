@@ -67,8 +67,8 @@ const AiForm = () => {
     });
 
     const dataResponse = await response.json();
-    console.log(dataResponse);
-    if (!dataResponse.imageUrl) return;// If no image URL, do nothing
+    console.log(dataResponse, "dataResponse");
+    if (!dataResponse.imageUrl) return; // If no image URL, do nothing
     setImageUrl(dataResponse.imageUrl); // Update the image URL
 
     setLoading(false); // Set loading to false when the image is ready
