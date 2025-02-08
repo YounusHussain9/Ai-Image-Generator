@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,8 @@ import Image from "next/image";
 import { ModeToggle } from "@/app/components/mode-toggle/ModeToggle";
 import { Textarea } from "./ui/textarea";
 import PromptTooltip from "@/app/components/prompt-tooltip/PromptTooltip";
+import ImageShimmer from "@/app/components/image-shimmer";
+import { PromptGuideModal } from "@/app/components/prompt-guide-modal";
 
 const prompts = [
   "A futuristic city under a neon sky...",
@@ -35,9 +38,11 @@ const realisticPrompts = [
 ];
 
 const AiForm = () => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [placeholder, setPlaceholder] = useState(prompts[0]);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof aiFormSchema>>({
     resolver: zodResolver(aiFormSchema),
@@ -55,23 +60,32 @@ const AiForm = () => {
   }, []);
 
   const onSubmit = async (data: { prompt: string }) => {
-    setLoading(true); // Set loading to true when submission starts
-    const response = await fetch("/api/ai-image", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        prompt: data.prompt, // Use the prompt from the form
-      }),
-    });
+    setLoading(true);
+    setError(null); // Reset error before new request
 
-    const dataResponse = await response.json();
-    console.log(dataResponse, "dataResponse");
-    if (!dataResponse.imageUrl) return; // If no image URL, do nothing
-    setImageUrl(dataResponse.imageUrl); // Update the image URL
+    try {
+      const response = await fetch("/api/ai-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: data.prompt }),
+      });
 
-    setLoading(false); // Set loading to false when the image is ready
+      const dataResponse = await response.json();
+
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: dataResponse.error || "Something went wrong.",
+        });
+      }
+
+      setImageUrl(dataResponse.imageUrl);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -122,7 +136,7 @@ const AiForm = () => {
           {realisticPrompts.map((prompt, index) => (
             <div
               key={index}
-              className="bg-gradient-to-b from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900 text-sm whitespace-nowrap p-2 rounded-xl text-black dark:text-white"
+              className="bg-gradient-to-b from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-800 text-sm whitespace-nowrap p-2 rounded-xl text-black dark:text-white"
             >
               <PromptTooltip prompt={prompt}>
                 <div
@@ -135,12 +149,12 @@ const AiForm = () => {
             </div>
           ))}
         </div>
-
+        <PromptGuideModal />
         {loading ? (
-          <div className="text-center mt-8">Generating image...</div>
+          <ImageShimmer />
         ) : (
           imageUrl && (
-            <div className="border h-[300px] w-[300px] mt-8 rounded-md overflow-hidden">
+            <div className="border h-[300px] w-[300px] mt-4 rounded-md overflow-hidden">
               <Image
                 src={imageUrl}
                 alt="AI Generated Image"
@@ -148,6 +162,7 @@ const AiForm = () => {
                 height={256}
                 style={{ maxWidth: "100%" }}
                 className="!w-full !h-full  object-center"
+                unoptimized
               />
             </div>
           )

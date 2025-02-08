@@ -6,20 +6,44 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { prompt } = body;
   try {
+    const body = await req.json();
+    const { prompt } = body;
+
+    if (!prompt || prompt.trim().length === 0) {
+      return NextResponse.json(
+        { error: "Prompt cannot be empty." },
+        { status: 400 }
+      );
+    }
+
     const response = await openai.images.generate({
       prompt,
       n: 1,
-      size: "512x512", // Reduced size
+      size: "512x512",
     });
 
+    if (!response.data || response.data.length === 0) {
+      return NextResponse.json(
+        { error: "No image generated. Try another prompt." },
+        { status: 500 }
+      );
+    }
+
     const imageUrl = response.data[0].url;
-    console.log(imageUrl);
     return NextResponse.json({ imageUrl });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Failed to generate image" });
+  } catch (error: any) {
+    console.error("Image Generation Error:", error);
+
+    let errorMessage = "Failed to generate image. Please try again.";
+    if (error.response) {
+      console.error("OpenAI Error Response:", error.response.data);
+      errorMessage =
+        error.response.data.error?.message || "OpenAI service error.";
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
