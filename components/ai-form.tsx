@@ -42,6 +42,7 @@ const AiForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [placeholder, setPlaceholder] = useState(prompts[0]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof aiFormSchema>>({
@@ -81,6 +82,7 @@ const AiForm = () => {
       }
 
       setImageUrl(dataResponse.imageUrl);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {

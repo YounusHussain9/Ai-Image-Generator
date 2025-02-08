@@ -2,14 +2,10 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export function PromptGuideModal() {
   return (
@@ -29,11 +25,11 @@ export function PromptGuideModal() {
         <div>
           <div className="space-y-2">
             <p className="text-sm">
-              <strong> ✅ Be Specific: </strong> "A neon-lit cyberpunk city with
-              flying cars at night."
+              <strong> ✅ Be Specific: </strong> &quot;A neon-lit cyberpunk city
+              with flying cars at night.&quot;
             </p>
             <p className="text-sm">
-              <strong>❌ Vague:</strong> "A futuristic city."
+              <strong>❌ Vague:</strong> &quot;A futuristic city.&quot;
             </p>
             <p className="text-sm">
               <strong>✅ Use Strong Descriptors:</strong> lighting (cinematic,
@@ -41,25 +37,25 @@ export function PromptGuideModal() {
               eerie).
             </p>
             <p className="text-sm">
-              <strong>✅ Define Subject & Background:</strong> "A knight in
-              silver armor, standing in a foggy forest with moonlight shadows.
+              <strong>✅ Define Subject & Background:</strong> &quot;A knight in
+              silver armor, standing in a foggy forest with moonlight
+              shadows.&quot;
             </p>
             <p className="text-sm">
               <strong>✅ Use Camera & Art Terms:</strong> close-up, wide-angle,
               macro, bokeh, depth of field.
             </p>
             <p className="text-sm">
-              <strong> ✅ Good Prompt: </strong> "A rugged old man with a
+              <strong> ✅ Good Prompt: </strong> &quot;A rugged old man with a
               weathered face, wearing a tattered coat, standing in a dimly lit
-              alley under a flickering streetlamp."
+              alley under a flickering streetlamp.&quot;
             </p>
             <p className="text-sm">
-              <strong>❌ Poor Prompt:</strong> "A man standing."
+              <strong>❌ Poor Prompt:</strong> &quot;A man standing.&quot;
             </p>
             <p className="text-sm font-bold">
-              {" "}
-              🚀 Tip: Start simple & refine based on results!
-            </p>{" "}
+              🚀 Tip: Start simple &amp; refine based on results!
+            </p>
           </div>
         </div>
       </DialogContent>
