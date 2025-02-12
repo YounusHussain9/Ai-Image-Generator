@@ -18,7 +18,7 @@ export function PromptGuideModal() {
           Prompt Guide
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[90%] sm:max-w-[500px]">
+      <DialogContent className="w-[90%] rounded-md md:w-auto">
         <DialogHeader>
           <DialogTitle>AI Image Generator - Prompt Guide</DialogTitle>
         </DialogHeader>
