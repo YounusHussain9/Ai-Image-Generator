@@ -95,6 +95,11 @@ const AiForm = () => {
     }
   };
 
+  const handleModelChange = (model: string) => {
+    setSelectedModel(model);
+    setImageUrl(null);
+  };
+
   return (
     <div className="flex flex-col mt-5 items-center min-h-screen">
       <div className="flex justify-end w-full pr-8">
@@ -154,7 +159,7 @@ const AiForm = () => {
                 hidden
                 name="model"
                 checked={selectedModel === "general"}
-                onChange={() => setSelectedModel("general")}
+                onChange={() => handleModelChange("general")}
               />
               <span
                 className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
@@ -172,7 +177,7 @@ const AiForm = () => {
                 hidden
                 name="model"
                 checked={selectedModel === "dall-e-2"}
-                onChange={() => setSelectedModel("dall-e-2")}
+                onChange={() => handleModelChange("dall-e-2")}
               />
               <span
                 className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
@@ -190,7 +195,7 @@ const AiForm = () => {
                 hidden
                 name="model"
                 checked={selectedModel === "dall-e-3"}
-                onChange={() => setSelectedModel("dall-e-3")}
+                onChange={() => handleModelChange("dall-e-3")}
               />
               <span
                 className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
