@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -40,6 +41,7 @@ export async function POST(req: Request) {
 
     const imageUrl = response.data[0].url;
     return NextResponse.json({ imageUrl });
+    revalidatePath("/");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Image Generation Error:", error);
