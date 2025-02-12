@@ -8,7 +8,7 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { prompt } = body;
+    const { prompt, model } = body;
 
     if (!prompt || prompt.trim().length === 0) {
       return NextResponse.json(
@@ -17,11 +17,19 @@ export async function POST(req: Request) {
       );
     }
 
-    const response = await openai.images.generate({
+    // Only include the model key if a specific model is selected
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const requestPayload: any = {
       prompt,
       n: 1,
-      size: "512x512",
-    });
+      // size: "512x512",
+    };
+
+    if (model && model !== "general") {
+      requestPayload.model = model; // Only add `model` if it's not "general"
+    }
+
+    const response = await openai.images.generate(requestPayload);
 
     if (!response.data || response.data.length === 0) {
       return NextResponse.json(

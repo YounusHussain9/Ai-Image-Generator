@@ -42,6 +42,7 @@ const AiForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [placeholder, setPlaceholder] = useState(prompts[0]);
+  const [selectedModel, setSelectedModel] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
@@ -60,6 +61,7 @@ const AiForm = () => {
     return () => clearInterval(interval);
   }, []);
 
+  console.log(selectedModel);
   const onSubmit = async (data: { prompt: string }) => {
     setLoading(true);
     setError(null); // Reset error before new request
@@ -68,7 +70,7 @@ const AiForm = () => {
       const response = await fetch("/api/ai-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: data.prompt }),
+        body: JSON.stringify({ prompt: data.prompt, model:selectedModel }),
       });
 
       const dataResponse = await response.json();
@@ -82,7 +84,7 @@ const AiForm = () => {
       }
 
       setImageUrl(dataResponse.imageUrl);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -116,6 +118,12 @@ const AiForm = () => {
                     <FormControl>
                       <Textarea
                         placeholder={placeholder}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            form.handleSubmit(onSubmit)();
+                          }
+                        }}
                         className="w-full h-[100px] resize-none"
                         {...field}
                       />
@@ -133,23 +141,87 @@ const AiForm = () => {
               </Button>
             </form>
           </Form>
-        </div>
-        <div className="flex gap-4 mt-8 flex-wrap justify-center">
-          {realisticPrompts.map((prompt, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-b from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-800 text-sm whitespace-nowrap p-2 rounded-xl text-black dark:text-white"
+        <div className="my-2 flex items-center">
+          <h3 className="text-sm font-semibold py-2 text-center">
+            Select Models
+          </h3>
+          <label className="ml-4 cursor-pointer flex items-center">
+            <input
+              type="radio"
+              hidden
+              name="model"
+              checked={selectedModel === "general"}
+              onChange={() => setSelectedModel("general")}
+            />
+            <span
+              className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
+                selectedModel === "general"
+                  ? "font-semibold bg-black text-white scale-105"
+                  : "bg-gray-200 text-black scale-100"
+              }`}
             >
-              <PromptTooltip prompt={prompt}>
-                <div
-                  onClick={() => form.setValue("prompt", prompt)}
-                  className="cursor-pointer"
-                >
-                  {prompt.slice(0, 20)}
-                </div>
-              </PromptTooltip>
-            </div>
-          ))}
+              General
+            </span>
+          </label>{" "}
+          <label className="ml-4 cursor-pointer flex items-center">
+            <input
+              type="radio"
+              hidden
+              name="model"
+              checked={selectedModel === "dall-e-2"}
+              onChange={() => setSelectedModel("dall-e-2")}
+            />
+            <span
+              className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
+                selectedModel === "dall-e-2"
+                  ? "font-semibold bg-black text-white scale-105"
+                  : "bg-gray-200 text-black scale-100"
+              }`}
+            >
+              Dall-e-2
+            </span>
+          </label>
+          <label className="ml-4 cursor-pointer flex items-center">
+            <input
+              type="radio"
+              hidden
+              name="model"
+              checked={selectedModel === "dall-e-3"}
+              onChange={() => setSelectedModel("dall-e-3")}
+            />
+            <span
+              className={`ml-2 p-1.5 text-xs rounded transition-all duration-300 ease-in-out ${
+                selectedModel === "dall-e-3"
+                  ? "font-semibold bg-black text-white scale-105"
+                  : "bg-gray-200 text-black scale-100"
+              }`}
+            >
+              Dall-e-3
+            </span>
+          </label>{" "}
+        </div>
+        </div>
+        <div className="">
+          <h3 className="text-sm font-semibold py-2 text-center">
+            Example Prompts
+          </h3>
+          <div className="flex gap-4  flex-wrap items-center justify-center">
+            {realisticPrompts.map((prompt, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-b from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-800 text-sm whitespace-nowrap p-2 rounded-xl text-black dark:text-white"
+              >
+                <PromptTooltip prompt={prompt}>
+                  <div
+                    onClick={() => form.setValue("prompt", prompt)}
+                    className="cursor-pointer"
+                  >
+                    {prompt.slice(0, 20)}
+                  </div>
+                </PromptTooltip>
+              </div>
+            ))}
+          </div>
         </div>
         <PromptGuideModal />
         {loading ? (
