@@ -141,7 +141,7 @@ const AiForm = () => {
               </Button>
             </form>
           </Form>
-        <div className="my-2 flex items-center">
+        <div className="my-2 flex justify-center items-center">
           <h3 className="text-sm font-semibold py-2 text-center">
             Select Models
           </h3>
